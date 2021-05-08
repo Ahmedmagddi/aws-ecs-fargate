@@ -1,0 +1,36 @@
+Description: >
+    This template creates the ECR that will hold the Application
+    image that's built by codebuild.
+
+Parameters:
+
+    RepositoryName:
+        Description: The name of the ECR repository
+        Type: String
+
+Resources:
+
+    Repository:
+        Type: "AWS::ECR::Repository"
+        Properties:
+            RepositoryName: !Ref RepositoryName
+            RepositoryPolicyText:
+                Version: "2012-10-17"
+                Statement:
+                    -
+                        Sid: AllowPushPull
+                        Effect: Allow
+                        Principal:
+                            AWS:
+                                !Ref AWS::AccountId
+                        Action:
+                            - "ecr:*"
+                            - "ecr:GetAuthorizationToken"
+
+Outputs:
+
+    RepositoryArn:
+        Value: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${Repository}
+
+    RepositoryUri:
+        Value: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}
