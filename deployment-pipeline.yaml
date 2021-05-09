@@ -19,7 +19,6 @@ Parameters:
   GitHubOAuthToken:
     Type: String
     Description: "Please enter your personal GitHub access token"
-    Default: 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
     NoEcho: true
 
   GitHubOwner:
