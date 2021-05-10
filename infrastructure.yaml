@@ -20,6 +20,10 @@ Parameters:
     Description: An environment name that will be used all over solution arch
     Type: String
 
+  ContainerName:
+    Description: Please enter a container name for your Application
+    Type: String
+
   RepositoryName:
     Description: The name of the ECR repository
     Type: String
@@ -73,3 +77,4 @@ Resources:
                 VPC: !GetAtt VPC.Outputs.VPC
                 Listener: !GetAtt ALB.Outputs.Listener
                 ECSServicesSecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
+                ContainerName: !Ref ContainerName

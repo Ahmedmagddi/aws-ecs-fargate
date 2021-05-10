@@ -18,6 +18,8 @@ Parameters:
     ECSServicesSecurityGroup:
         Type: AWS::EC2::SecurityGroup::Id
 
+    ContainerName:
+        Type: String
 
 Resources:
 
@@ -43,7 +45,7 @@ Resources:
                     SecurityGroups:
                         - !Ref ECSServicesSecurityGroup
             LoadBalancers:
-                - ContainerName: !Join ['-', [!Ref EnvironmentName, 'container']]
+                - ContainerName: !Join ['-', [!Ref ContainerName, 'container']]
                   ContainerPort: 80
                   TargetGroupArn: !Ref TargetGroup
 
@@ -141,5 +143,3 @@ Outputs:
     EcsTaskExecutionRoleArn:
         Description: A reference to the created IAM role ARN
         Value: !Ref TaskExecutionRole
-
-
