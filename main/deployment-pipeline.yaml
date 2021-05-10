@@ -6,9 +6,9 @@ Description: >
     this stack.
 
 Parameters:
-  EnvironmentName:
+  ContainerName:
     Type: String
-    Description: "Please enter the same environment name of infrastructure Stack"
+    Description: "Please enter the same container name of infrastructure Stack"
 
   ClusterName:
     Type: String
@@ -76,7 +76,7 @@ Resources:
           Value:
             Ref: Repository
         - Name: ContainerName
-          Value: !Join ['-', [!Ref EnvironmentName, 'container']]
+          Value: !Join ['-', [!Ref ContainerName, 'container']]
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole
 
