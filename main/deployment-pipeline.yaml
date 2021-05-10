@@ -1,0 +1,238 @@
+Description: >
+    This is code build, and deployment template. It'll connect to
+    source code GitHub repo, save code source in S3 Bucket, build
+    and test it by codebuild, and finally deploy it to a ready ECS
+    Fargate cluster infrastructure that was built before starting
+    this stack.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Description: "Please enter the same environment name of infrastructure Stack"
+
+  ClusterName:
+    Type: String
+
+  ServiceArn:
+    Type: String
+
+  GitHubOAuthToken:
+    Type: String
+    Description: "Please enter your personal GitHub access token"
+    NoEcho: true
+
+  GitHubOwner:
+    Type: String
+    Description: "Please enter your GitHub username"
+    Default: Ahmed90-DevOps
+    AllowedPattern: "[A-Za-z0-9-]+"
+
+  GitHubRepo:
+    Type: String
+    Description: "Please enter your GitHub Repo name"
+    Default: aws-ecs-fargate
+    AllowedPattern: "[A-Za-z0-9-]+"
+
+  # Please enter your new branch name while creating the stack if you'll
+  # change it to another branch after forking
+  GitHubBranch:
+    Type: String
+    Description: "Please enter your GitHub Repo branch"
+    Default: main
+    AllowedPattern: "[A-Za-z0-9-]+"
+
+  Repository:
+    Type: String
+    Description: Please choose a repo name that was created by the infra stack
+
+Resources:
+
+  PipelineArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Location:
+          Ref: PipelineArtifactsBucket
+        Type: S3
+      Source:
+        Location:
+          Fn::Sub: "${PipelineArtifactsBucket}/*.zip"
+        Type: S3
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:3.0
+        PrivilegedMode: true
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+        - Name: REPO_URL
+          Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
+        - Name: REPO_NAME
+          Value:
+            Ref: Repository
+        - Name: ContainerName
+          Value: !Join ['-', [!Ref EnvironmentName, 'container']]
+      Name: !Ref AWS::StackName
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Type: S3
+        Location: !Ref PipelineArtifactsBucket
+      RestartExecutionOnUpdate: true
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      Stages:
+      - Name: Source
+        Actions:
+        - Name: Source
+          InputArtifacts: []
+          ActionTypeId:
+            Category: Source
+            Owner: ThirdParty
+            Version: 1
+            Provider: GitHub
+          OutputArtifacts:
+           - Name: SourceCode
+          Configuration:
+            Owner: !Ref GitHubOwner
+            Repo: !Ref GitHubRepo
+            Branch: !Ref GitHubBranch
+            PollForSourceChanges: false
+            OAuthToken: !Ref GitHubOAuthToken
+          RunOrder: 1
+
+      - Name: Build
+        Actions:
+         - Name: CodeBuild
+           InputArtifacts:
+             - Name: SourceCode
+           ActionTypeId:
+             Category: Build
+             Owner: AWS
+             Version: '1'
+             Provider: CodeBuild
+           OutputArtifacts:
+            - Name: BuildOutput
+           Configuration:
+             ProjectName: !Ref CodeBuildProject
+           RunOrder: 1
+
+      - Name: Deploy-to-Beta-Env
+        Actions:
+          - Name: Deploy
+            ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: ECS
+            Configuration:
+                ClusterName: !Ref ClusterName
+                ServiceName: !Ref ServiceArn
+                FileName: imagedefinitions.json
+            InputArtifacts:
+                - Name: BuildOutput
+            RunOrder: 1
+
+  GithubWebhook:
+     Type: 'AWS::CodePipeline::Webhook'
+     Properties:
+       Authentication: GITHUB_HMAC
+       AuthenticationConfiguration:
+         SecretToken: !Ref GitHubOAuthToken
+       RegisterWithThirdParty: 'true'
+       Filters:
+       - JsonPath: "$.ref"
+         MatchEquals: refs/heads/{Branch}
+       TargetPipeline: !Ref CodePipeline
+       TargetAction: Source
+       TargetPipelineVersion: !GetAtt CodePipeline.Version
+
+
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": { "Service": [ "codepipeline.amazonaws.com" ]},
+                "Action": [ "sts:AssumeRole" ]
+            }]
+        }
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource:
+                  - !Sub arn:aws:s3:::${PipelineArtifactsBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - ecs:DescribeServices
+                  - ecs:DescribeTaskDefinition
+                  - ecs:DescribeTasks
+                  - ecs:ListTasks
+                  - ecs:RegisterTaskDefinition
+                  - ecs:UpdateService
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - iam:PassRole
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - ecr:GetAuthorizationToken
+              - Resource: !Sub arn:aws:s3:::${PipelineArtifactsBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
+              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${Repository}
+                Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+
+Outputs:
+  PipelineUrl:
+    Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${CodePipeline}
