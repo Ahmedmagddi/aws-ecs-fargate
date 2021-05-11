@@ -61,7 +61,7 @@ Resources:
             RequiresCompatibilities:
                 - FARGATE
             ContainerDefinitions:
-                - Name: !Join ['-', [!Ref EnvironmentName, 'container']]
+                - Name: !Join ['-', [!Ref ContainerName, 'container']]
                   Environment:
                       - Name: PORT
                         Value: 80
