@@ -16,6 +16,9 @@ Parameters:
   ServiceArn:
     Type: String
 
+  ALBURL:
+    Type: String
+
   GitHubOAuthToken:
     Type: String
     Description: "Please enter your personal GitHub access token"
@@ -80,6 +83,29 @@ Resources:
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole
 
+  BetaTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Location:
+          Ref: PipelineArtifactsBucket
+        Type: S3
+      Source:
+        BuildSpec: BetaTestSpec.yml
+        Location:
+          Fn::Sub: "${PipelineArtifactsBucket}/*.zip"
+        Type: S3
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:3.0
+        PrivilegedMode: true
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+        - Name: ALB_URL
+          Value: !Ref ALBURL
+      Name: !Join ['-', ['Beta', 'Test']]
+      ServiceRole: !Ref CodeBuildServiceRole
+
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -138,6 +164,18 @@ Resources:
                 FileName: imagedefinitions.json
             InputArtifacts:
                 - Name: BuildOutput
+            RunOrder: 1
+
+      - Name: Test-Beta-Env
+        Actions:
+          - Name: Test
+            ActionTypeId:
+              Category: Test
+              Owner: AWS
+              Version: 1
+              Provider: CodeBuild
+            Configuration:
+              ProjectName: !Ref BetaTestProject
             RunOrder: 1
 
   GithubWebhook:
