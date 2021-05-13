@@ -169,6 +169,8 @@ Resources:
       - Name: Test-Beta-Env
         Actions:
           - Name: Test
+            InputArtifacts:
+              - Name: SourceCode
             ActionTypeId:
               Category: Test
               Owner: AWS
