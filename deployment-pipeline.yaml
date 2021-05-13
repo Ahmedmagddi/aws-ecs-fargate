@@ -80,7 +80,7 @@ Resources:
             Ref: Repository
         - Name: ContainerName
           Value: !Join ['-', [!Ref ContainerName, 'container']]
-      Name: !Ref AWS::StackName
+      Name: !Join ['-', ['Beta', 'ECS', 'Deploy']]
       ServiceRole: !Ref CodeBuildServiceRole
 
   BetaTestProject:
