@@ -1,0 +1,7 @@
+version: 0.2
+
+phases:
+  test_beta_env:
+    commands:
+      - echo Curl ALB URL of Beta Environment
+      - curl -i $ALB_URL
