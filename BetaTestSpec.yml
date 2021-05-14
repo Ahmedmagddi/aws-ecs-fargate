@@ -4,4 +4,4 @@ phases:
   build:
     commands:
       - echo Curl ALB URL of Beta Environment
-      - curl -is $ALB_URL | head -n 1 | grep 500
+      - curl -is $ALB_URL | head -n 1 | grep 200
