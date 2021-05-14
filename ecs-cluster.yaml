@@ -36,7 +36,7 @@ Resources:
             LaunchType: FARGATE
             DesiredCount: 2
             DeploymentConfiguration:
-                MaximumPercent: 200
+                MaximumPercent: 150
                 MinimumHealthyPercent: 100
             TaskDefinition: !Ref TaskDefinition
             NetworkConfiguration:
