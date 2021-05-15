@@ -98,7 +98,7 @@ Resources:
             TargetType: ip
             TargetGroupAttributes:
                 - Key: deregistration_delay.timeout_seconds
-                  Value: '60'
+                  Value: '5'
                 - Key: load_balancing.algorithm.type
                   Value: round_robin
 
