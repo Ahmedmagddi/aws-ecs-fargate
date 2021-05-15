@@ -161,9 +161,9 @@ Resources:
              ProjectName: !Ref CodeBuildProject
            RunOrder: 1
 
-      - Name: Deploy-to-Beta-Env
+      - Name: Beta-Env
         Actions:
-          - Name: Deploy
+          - Name: Deploy-To-Beta-Env
             ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -177,9 +177,7 @@ Resources:
                 - Name: BuildOutput
             RunOrder: 1
 
-      - Name: Test-Beta-Env
-        Actions:
-          - Name: Test
+          - Name: Test-Beta-Env
             InputArtifacts:
               - Name: SourceCode
             ActionTypeId:
@@ -189,9 +187,9 @@ Resources:
               Provider: CodeBuild
             Configuration:
               ProjectName: !Ref BetaTestProject
-            RunOrder: 1
+            RunOrder: 2
 
-          - Name: ApproveBetaEnv
+          - Name: Approve-Beta-Env
             ActionTypeId:
                 Category: Approval
                 Owner: AWS
@@ -200,7 +198,7 @@ Resources:
             Configuration:
                 NotificationArn: !Ref CodePipelineSNSTopic
                 CustomData: !Sub 'Do you want to release code to production?'
-            RunOrder: 2
+            RunOrder: 3
 
   GithubWebhook:
      Type: 'AWS::CodePipeline::Webhook'
