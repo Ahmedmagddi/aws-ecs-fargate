@@ -48,6 +48,10 @@ Parameters:
     Type: String
     Description: Please choose a repo name that was created by the infra stack
 
+  Email:
+    Description: The email address where CodePipeline sends pipeline notifications
+    Type: String
+
 Resources:
 
   PipelineArtifactsBucket:
@@ -55,6 +59,13 @@ Resources:
     Properties:
       VersioningConfiguration:
         Status: Enabled
+
+  CodePipelineSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref Email
+          Protocol: email
 
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -180,6 +191,17 @@ Resources:
               ProjectName: !Ref BetaTestProject
             RunOrder: 1
 
+          - Name: ApproveBetaEnv
+            ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+            Configuration:
+                NotificationArn: !Ref CodePipelineSNSTopic
+                CustomData: !Sub 'Do you want to release code to production?'
+            RunOrder: 2
+
   GithubWebhook:
      Type: 'AWS::CodePipeline::Webhook'
      Properties:
@@ -232,6 +254,7 @@ Resources:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
                   - iam:PassRole
+                  - sns:Publish
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
