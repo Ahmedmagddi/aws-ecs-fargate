@@ -1,77 +1,79 @@
 <!DOCTYPE html>
-<title>My Example</title>
+<html>
+<head>
+<style>
+table {
+  width:100%;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+table.names tr:nth-child(even) {
+  background-color: #eee;
+}
+table.names tr:nth-child(odd) {
+  background-color:#fff;
+}
+table.names th {
+  background-color: black;
+  color: white
+}
+</style>
+</head>
+<body>
 
-<form method="get" action="/html/codes/html_form_handler.cfm">
-  <p>
-    <label>Name
-      <input type="text" name="customer_name" required>
-    </label> 
-  </p>
+<table>
+  <tr>
+    <th>Firstname</th>
+    <th>Lastname</th> 
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Jill</td>
+    <td>Smith</td>
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td>
+    <td>94</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+</table>
 
-  <p>
-    <label>Phone 
-      <input type="tel" name="phone_number">
-    </label>
-  </p>
+<br>
 
-  <p>
-    <label>Email 
-      <input type="email" name="email_address">
-    </label>
-  </p>
+<table class="names">
+  <tr>
+    <th>Firstname</th>
+    <th>Lastname</th> 
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Jill</td>
+    <td>Smith</td>
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td>
+    <td>94</td>
+  </tr>
+  <tr>
+    <td>John</td>
+    <td>Doe</td>
+    <td>80</td>
+  </tr>
+</table>
 
-  <fieldset>
-    <legend>Which taxi do you require?</legend>
-    <p><label> <input type="radio" name="taxi" required value="car"> Car </label></p>
-    <p><label> <input type="radio" name="taxi" required value="van"> Van </label></p>
-    <p><label> <input type="radio" name="taxi" required value="tuktuk"> Tuk Tuk </label></p>
-  </fieldset>
-
-  <fieldset>
-    <legend>Extras</legend>
-    <p><label> <input type="checkbox" name="extras" value="baby"> Baby Seat </label></p>
-    <p><label> <input type="checkbox" name="extras" value="wheelchair"> Wheelchair Access </label></p>
-    <p><label> <input type="checkbox" name="extras" value="tip"> Stock Tip </label></p>
-  </fieldset>
-
-  <p>
-    <label>Pickup Date/Time
-      <input type="datetime-local" name="pickup_time" required>
-    </label>
-  </p>
-
-  <p>
-    <label>Pickup Place
-      <select id="pickup_place" name="pickup_place">
-        <option value="" selected="selected">Select One</option>
-        <option value="office" >Taxi Office</option>
-        <option value="town_hall" >Town Hall</option>
-        <option value="telepathy" >We'll Guess!</option>
-      </select>
-    </label> 
-  </p>
-
-  <p>
-    <label>Dropoff Place
-      <input type="text" name="dropoff_place" required list="destinations">
-    </label>
-
-    <datalist id="destinations">
-      <option value="Airport">
-      <option value="Beach">
-      <option value="Fred Flinstone's House">
-    </datalist>
-  </p>
-
-  <p>
-    <label>Special Instructions
-      <textarea name="comments" maxlength="500"></textarea>
-    </label>
-  </p>
-
-  <p><button>Submit Booking</button></p>
-
-</form>
-
-<hr>
-<p>More info: <a href="/html/tags/html_form_tag.cfm"><code>form</code></a>, <a href="/html/tutorial/html_forms.cfm">HTML Form Tutorial</a>, <a href="/html/codes/html_form_code.cfm">HTML Form Code</a>, <a href="/html/codes/html_form_to_email.cfm">Form to Email</a>.</p>
+</body>
+</html>
