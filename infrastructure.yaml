@@ -7,7 +7,7 @@ Description: >
   ECS hosts distributed across multiple Availability Zones.
   Finally, it deploys a pair of example ECS services from containers published in
   Amazon EC2 Container Registry (Amazon ECR).
-  Author: Ahmed Magdy
+  Author: Ahmed Magdy Abdelwahab
 
 Parameters:
 
