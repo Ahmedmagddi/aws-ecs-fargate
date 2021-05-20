@@ -76,5 +76,6 @@ Resources:
                 EnvironmentName: !Ref EnvironmentName
                 VPC: !GetAtt VPC.Outputs.VPC
                 Listener: !GetAtt ALB.Outputs.Listener
+                ProdListener: !GetAtt ALB.Outputs.ProdListener
                 ECSServicesSecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 ContainerName: !Ref ContainerName
