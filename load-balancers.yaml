@@ -40,6 +40,17 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref DefaultTargetGroup
 
+  AlfaListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 8080
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+
+
   # We define a default target group here, as this is a mandatory Parameters
   # when creating an Application Load Balancer Listener. This is not used, instead
   # a target group is created per-service in each service template (../services/*)
@@ -63,3 +74,7 @@ Outputs:
   Listener:
     Description: A reference to a port 80 listener
     Value: !Ref LoadBalancerListener
+
+  ProdListener:
+    Description: A reference to a port 8080 listener
+    Value: !Ref AlfaListener
