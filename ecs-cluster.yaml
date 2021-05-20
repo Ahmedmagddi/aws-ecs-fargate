@@ -9,6 +9,9 @@ Parameters:
     Listener:
         Type: String
 
+    ProdListener:
+        Type: String
+
     EnvironmentName:
         Type: String
 
@@ -48,6 +51,28 @@ Resources:
                 - ContainerName: !Join ['-', [!Ref ContainerName, 'container']]
                   ContainerPort: 80
                   TargetGroupArn: !Ref TargetGroup
+
+    ServiceAlfa:
+        Type: AWS::ECS::Service
+        DependsOn: ListenerRuleAlfa
+        Properties:
+            Cluster: !Ref Cluster
+            LaunchType: FARGATE
+            DesiredCount: 4
+            DeploymentConfiguration:
+                MaximumPercent: 150
+                MinimumHealthyPercent: 100
+            TaskDefinition: !Ref TaskDefinition
+            NetworkConfiguration:
+                AwsvpcConfiguration:
+                    Subnets: !Ref Subnets
+                    SecurityGroups:
+                        - !Ref ECSServicesSecurityGroup
+            LoadBalancers:
+                - ContainerName: !Join ['-', [!Ref ContainerName, 'container']]
+                  ContainerPort: 80
+                  TargetGroupArn: !Ref TargetGroupAlfa
+
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
@@ -102,6 +127,27 @@ Resources:
                 - Key: load_balancing.algorithm.type
                   Value: round_robin
 
+    TargetGroupAlfa:
+        Type: AWS::ElasticLoadBalancingV2::TargetGroup
+        Properties:
+            VpcId: !Ref VPC
+            Port: 80
+            Protocol: HTTP
+            Matcher:
+                HttpCode: 200-299
+            HealthCheckIntervalSeconds: 10
+            HealthCheckPath: /index.html
+            HealthCheckProtocol: HTTP
+            HealthCheckTimeoutSeconds: 5
+            HealthyThresholdCount: 2
+            TargetType: ip
+            TargetGroupAttributes:
+                - Key: deregistration_delay.timeout_seconds
+                  Value: '5'
+                - Key: load_balancing.algorithm.type
+                  Value: round_robin
+
+
     ListenerRule:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
@@ -113,6 +159,19 @@ Resources:
                     - "*"
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ListenerRuleAlfa:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref ProdListener
+            Priority: 1
+            Conditions:
+                - Field: path-pattern
+                  Values:
+                    - "*"
+            Actions:
+                - TargetGroupArn: !Ref TargetGroupAlfa
                   Type: forward
 
     TaskExecutionRole:
@@ -133,8 +192,12 @@ Resources:
 Outputs:
 
     EcsServiceArn:
-        Description: A reference to the created ECS service ARN
+        Description: A reference to the created Beta ECS service ARN
         Value: !Ref Service
+
+    AlfaServiceArn:
+        Description: A reference to the created Alfa ECS service ARN
+        Value: !Ref ServiceAlfa
 
     EcsClusterName:
         Description: A reference to the created ECS service ARN
