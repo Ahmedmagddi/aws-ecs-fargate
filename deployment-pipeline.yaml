@@ -16,6 +16,9 @@ Parameters:
   ServiceArn:
     Type: String
 
+  AlfaServiceArn:
+    Type: String
+
   ALBURL:
     Type: String
 
@@ -199,6 +202,23 @@ Resources:
                 NotificationArn: !Ref CodePipelineSNSTopic
                 CustomData: !Sub 'Do you want to release code to production?'
             RunOrder: 3
+
+      - Name: Alfa-Env
+        Actions:
+          - Name: Deploy-To-Alfa-Env
+            ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: ECS
+            Configuration:
+                ClusterName: !Ref ClusterName
+                ServiceName: !Ref AlfaServiceArn
+                FileName: imagedefinitions.json
+            InputArtifacts:
+                - Name: BuildOutput
+            RunOrder: 1
+
 
   GithubWebhook:
      Type: 'AWS::CodePipeline::Webhook'
