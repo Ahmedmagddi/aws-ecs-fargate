@@ -75,7 +75,7 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
                 ProjectName: !Ref ProjectName
                 VPC: !GetAtt VPC.Outputs.VPC
-                Listener: !GetAtt ALB.Outputs.Listener
+                PreProdListener: !GetAtt ALB.Outputs.PreProdListener
                 ProdListener: !GetAtt ALB.Outputs.ProdListener
                 ECSServicesSecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 ContainerName: !Ref ContainerName

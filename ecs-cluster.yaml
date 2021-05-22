@@ -6,7 +6,7 @@ Parameters:
     VPC:
         Type: AWS::EC2::VPC::Id
 
-    Listener:
+    PreProdListener:
         Type: String
 
     ProdListener:
@@ -31,7 +31,7 @@ Resources:
         Properties:
             ClusterName: !Sub ${ProjectName}-Cluster
 
-    Service:
+    ServiceBeta:
         Type: AWS::ECS::Service
         DependsOn: ListenerRule
         Properties:
@@ -107,7 +107,7 @@ Resources:
             LogGroupName: !Ref ProjectName
             RetentionInDays: 365
 
-    TargetGroup:
+    TargetGroupBeta:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
         Properties:
             VpcId: !Ref VPC
@@ -148,10 +148,10 @@ Resources:
                   Value: round_robin
 
 
-    ListenerRule:
+    ListenerRuleBeta:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
-            ListenerArn: !Ref Listener
+            ListenerArn: !Ref PreProdListener
             Priority: 1
             Conditions:
                 - Field: path-pattern
@@ -191,9 +191,9 @@ Resources:
 
 Outputs:
 
-    EcsServiceArn:
+    BetaServiceArn:
         Description: A reference to the created Beta ECS service ARN
-        Value: !Ref Service
+        Value: !Ref ServiceBeta
 
     AlfaServiceArn:
         Description: A reference to the created Alfa ECS service ARN
