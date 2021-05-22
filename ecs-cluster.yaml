@@ -12,7 +12,7 @@ Parameters:
     ProdListener:
         Type: String
 
-    EnvironmentName:
+    ProjectName:
         Type: String
 
     Subnets:
@@ -29,7 +29,7 @@ Resources:
     Cluster:
         Type: AWS::ECS::Cluster
         Properties:
-            ClusterName: !Sub ${EnvironmentName}-Cluster
+            ClusterName: !Sub ${ProjectName}-Cluster
 
     Service:
         Type: AWS::ECS::Service
@@ -81,7 +81,7 @@ Resources:
             ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
             Cpu: 256
             Memory: 512
-            Family: !Ref EnvironmentName
+            Family: !Ref ProjectName
             NetworkMode: awsvpc
             RequiresCompatibilities:
                 - FARGATE
@@ -97,14 +97,14 @@ Resources:
                   LogConfiguration:
                       LogDriver: awslogs
                       Options:
-                          awslogs-group: !Ref EnvironmentName
+                          awslogs-group: !Ref ProjectName
                           awslogs-region: !Ref AWS::Region
                           awslogs-stream-prefix: ecs
 
     LogGroup:
         Type: AWS::Logs::LogGroup
         Properties:
-            LogGroupName: !Ref EnvironmentName
+            LogGroupName: !Ref ProjectName
             RetentionInDays: 365
 
     TargetGroup:

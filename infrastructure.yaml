@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Default: https://ahmed-ecs-cloudformation.s3.eu-west-2.amazonaws.com/infrastructure/
 
-  EnvironmentName:
+  ProjectName:
     Description: An environment name that will be used all over solution arch
     Type: String
 
@@ -42,7 +42,7 @@ Resources:
     Properties:
       TemplateURL: !Sub ${S3TemplateKeyPrefix}vpc.yaml
       Parameters:
-        EnvironmentName: !Ref EnvironmentName
+        ProjectName: !Ref ProjectName
         VpcCIDR: 10.180.0.0/16
         PublicSubnet1CIDR: 10.180.10.0/24
         PublicSubnet2CIDR: 10.180.20.0/24
@@ -54,7 +54,7 @@ Resources:
     Properties:
       TemplateURL: !Sub ${S3TemplateKeyPrefix}security-groups.yaml
       Parameters:
-        EnvironmentName: !Ref EnvironmentName
+        ProjectName: !Ref ProjectName
         VPC: !GetAtt VPC.Outputs.VPC
 
   ALB:
@@ -62,7 +62,7 @@ Resources:
     Properties:
       TemplateURL: !Sub ${S3TemplateKeyPrefix}load-balancers.yaml
       Parameters:
-        EnvironmentName: !Ref EnvironmentName
+        ProjectName: !Ref ProjectName
         VPC: !GetAtt VPC.Outputs.VPC
         Subnets: !GetAtt VPC.Outputs.PublicSubnets
         SecurityGroup: !GetAtt SecurityGroups.Outputs.LoadBalancerSecurityGroup
@@ -73,7 +73,7 @@ Resources:
             TemplateURL: !Sub ${S3TemplateKeyPrefix}ecs-cluster.yaml
             Parameters:
                 Subnets: !GetAtt VPC.Outputs.PrivateSubnets
-                EnvironmentName: !Ref EnvironmentName
+                ProjectName: !Ref ProjectName
                 VPC: !GetAtt VPC.Outputs.VPC
                 Listener: !GetAtt ALB.Outputs.Listener
                 ProdListener: !GetAtt ALB.Outputs.ProdListener

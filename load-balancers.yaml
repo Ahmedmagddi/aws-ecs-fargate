@@ -2,7 +2,7 @@ Description: >
   This template deploys an Application Load Balancer that exposes our various ECS services.
 
 Parameters:
-  EnvironmentName:
+  ProjectName:
     Description: An environment name that will be imported from parent stack
     Type: String
 
@@ -22,13 +22,13 @@ Resources:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: !Ref EnvironmentName
+      Name: !Ref ProjectName
       Subnets: !Ref Subnets
       SecurityGroups:
         - !Ref SecurityGroup
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} ALB
+          Value: !Sub ${ProjectName} ALB
 
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -57,7 +57,7 @@ Resources:
   DefaultTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub ${EnvironmentName}-default
+      Name: !Sub ${ProjectName}-default
       VpcId: !Ref VPC
       Port: 5050
       Protocol: HTTP
