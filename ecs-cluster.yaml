@@ -35,6 +35,7 @@ Resources:
         Type: AWS::ECS::Service
         DependsOn: ListenerRuleBeta
         Properties:
+            ServiceName: Beta-Service
             Cluster: !Ref Cluster
             LaunchType: FARGATE
             DesiredCount: 2
@@ -56,6 +57,7 @@ Resources:
         Type: AWS::ECS::Service
         DependsOn: ListenerRuleAlfa
         Properties:
+            ServiceName: Alfa-Service
             Cluster: !Ref Cluster
             LaunchType: FARGATE
             DesiredCount: 4
@@ -110,6 +112,7 @@ Resources:
     TargetGroupBeta:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
         Properties:
+            Name: BetaGroup
             VpcId: !Ref VPC
             Port: 80
             Protocol: HTTP
@@ -130,6 +133,7 @@ Resources:
     TargetGroupAlfa:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
         Properties:
+            Name: AlfaGroup
             VpcId: !Ref VPC
             Port: 80
             Protocol: HTTP
