@@ -13,7 +13,7 @@ Parameters:
   ClusterName:
     Type: String
 
-  ServiceArn:
+  BetaServiceArn:
     Type: String
 
   AlfaServiceArn:
@@ -174,7 +174,7 @@ Resources:
                 Provider: ECS
             Configuration:
                 ClusterName: !Ref ClusterName
-                ServiceName: !Ref ServiceArn
+                ServiceName: !Ref BetaServiceArn
                 FileName: imagedefinitions.json
             InputArtifacts:
                 - Name: BuildOutput
