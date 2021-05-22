@@ -33,7 +33,7 @@ Resources:
 
     ServiceBeta:
         Type: AWS::ECS::Service
-        DependsOn: ListenerRule
+        DependsOn: ListenerRuleBeta
         Properties:
             Cluster: !Ref Cluster
             LaunchType: FARGATE
@@ -158,7 +158,7 @@ Resources:
                   Values:
                     - "*"
             Actions:
-                - TargetGroupArn: !Ref TargetGroup
+                - TargetGroupArn: !Ref TargetGroupBeta
                   Type: forward
 
     ListenerRuleAlfa:
