@@ -50,7 +50,7 @@ Resources:
             LoadBalancers:
                 - ContainerName: !Join ['-', [!Ref ContainerName, 'container']]
                   ContainerPort: 80
-                  TargetGroupArn: !Ref TargetGroup
+                  TargetGroupArn: !Ref TargetGroupBeta
 
     ServiceAlfa:
         Type: AWS::ECS::Service
