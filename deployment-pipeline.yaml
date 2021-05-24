@@ -205,7 +205,7 @@ Resources:
 
       - Name: Alfa-Env
         Actions:
-          - Name: Deploy-To-Alfa-Env
+          - Name: Deploy-To-Production-Alfa-Service
             ActionTypeId:
                 Category: Deploy
                 Owner: AWS
