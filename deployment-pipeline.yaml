@@ -192,7 +192,7 @@ Resources:
               ProjectName: !Ref BetaTestProject
             RunOrder: 2
 
-          - Name: Approve-Beta-Env
+          - Name: Approve-To-Production-Alfa-Service
             ActionTypeId:
                 Category: Approval
                 Owner: AWS
