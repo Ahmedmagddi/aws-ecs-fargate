@@ -79,3 +79,11 @@ Resources:
                 ProdListener: !GetAtt ALB.Outputs.ProdListener
                 ECSServicesSecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 ContainerName: !Ref ContainerName
+
+Outputs:
+  CName:
+    Description: "Container Name to be exported to APP Stack"
+    Value: !Join ['-', [!Ref ContainerName, 'container']]
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-ContainerID'
