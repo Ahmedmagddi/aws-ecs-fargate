@@ -6,9 +6,10 @@ Description: >
     this stack.
 
 Parameters:
-  ContainerName:
+  InfraStackName:
     Type: String
-    Description: "Please enter the same container name of infrastructure Stack"
+    Description: "Please enter the name of infrastructure Stack"
+    Default: ECS-FARGATE-INFRA
 
   ClusterName:
     Type: String
@@ -93,7 +94,8 @@ Resources:
           Value:
             Ref: Repository
         - Name: ContainerName
-          Value: !Join ['-', [!Ref ContainerName, 'container']]
+          Value: !ImportValue
+            'Fn::Sub': '${InfraStackName}-ContainerID'
       Name: !Join ['-', ['Beta', 'ECS', 'Deploy']]
       ServiceRole: !Ref CodeBuildServiceRole
 
