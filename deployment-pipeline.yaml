@@ -20,9 +20,6 @@ Parameters:
   AlfaServiceArn:
     Type: String
 
-  ALBURL:
-    Type: String
-
   GitHubOAuthToken:
     Type: String
     Description: "Please enter your personal GitHub access token"
@@ -118,7 +115,8 @@ Resources:
         Type: LINUX_CONTAINER
         EnvironmentVariables:
         - Name: ALB_URL
-          Value: !Ref ALBURL
+          Value: !ImportValue
+            'Fn::Sub': '${InfraStackName}-ALBURL'
       Name: !Join ['-', ['Beta', 'Test']]
       ServiceRole: !Ref CodeBuildServiceRole
 
