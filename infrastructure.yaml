@@ -87,3 +87,10 @@ Outputs:
     Export:
       Name:
         'Fn::Sub': '${AWS::StackName}-ContainerID'
+
+  LBURL:
+    Description: "ALB URL to be exported to APP Stack"
+    Value: !GetAtt ALB.Outputs.LoadBalancerUrl
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-ALBURL'
