@@ -94,3 +94,31 @@ Outputs:
     Export:
       Name:
         'Fn::Sub': '${AWS::StackName}-ALBURL'
+
+  AlfaServiceArn:
+    Description: "Alfa service arn to be exported to APP Stack"
+    Value: !GetAtt EcsCluster.Outputs.AlfaServiceArn
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-AlfaServiceArn'
+
+  BetaServiceArn:
+    Description: "Beta service arn to be exported to APP Stack"
+    Value: !GetAtt EcsCluster.Outputs.BetaServiceArn
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-BetaServiceArn'
+
+  ClusterName:
+    Description: "ECS Cluster Name to be exported to APP Stack"
+    Value: !GetAtt EcsCluster.Outputs.EcsClusterName
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-ClusterName'
+
+  RepoName:
+    Description: "Export Repo Name to APP Stack"
+    Value: !Ref RepositoryName
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-RepoName'
