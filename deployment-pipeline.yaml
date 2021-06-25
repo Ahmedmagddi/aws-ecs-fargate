@@ -11,15 +11,6 @@ Parameters:
     Description: "Please enter the name of infrastructure Stack"
     Default: ECS-FARGATE-INFRA
 
-  ClusterName:
-    Type: String
-
-  BetaServiceArn:
-    Type: String
-
-  AlfaServiceArn:
-    Type: String
-
   GitHubOAuthToken:
     Type: String
     Description: "Please enter your personal GitHub access token"
@@ -173,8 +164,10 @@ Resources:
                 Version: 1
                 Provider: ECS
             Configuration:
-                ClusterName: !Ref ClusterName
-                ServiceName: !Ref BetaServiceArn
+                ClusterName: !ImportValue
+                    'Fn::Sub': '${InfraStackName}-ClusterName'
+                ServiceName: !ImportValue
+                    'Fn::Sub': '${InfraStackName}-BetaServiceArn'
                 FileName: imagedefinitions.json
             InputArtifacts:
                 - Name: BuildOutput
@@ -212,8 +205,10 @@ Resources:
                 Version: 1
                 Provider: ECS
             Configuration:
-                ClusterName: !Ref ClusterName
-                ServiceName: !Ref AlfaServiceArn
+                ClusterName: !ImportValue
+                    'Fn::Sub': '${InfraStackName}-ClusterName'
+                ServiceName: !ImportValue
+                    'Fn::Sub': '${InfraStackName}-AlfaServiceArn'
                 FileName: imagedefinitions.json
             InputArtifacts:
                 - Name: BuildOutput
