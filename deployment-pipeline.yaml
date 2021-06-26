@@ -36,10 +36,6 @@ Parameters:
     Default: main
     AllowedPattern: "[A-Za-z0-9-]+"
 
-  Repository:
-    Type: String
-    Description: Please choose a repo name that was created by the infra stack
-
   Email:
     Description: The email address where CodePipeline sends pipeline notifications
     Type: String
@@ -79,8 +75,8 @@ Resources:
         - Name: REPO_URL
           Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
         - Name: REPO_NAME
-          Value:
-            Ref: Repository
+          Value: !ImportValue
+            'Fn::Sub': '${InfraStackName}-RepoName'
         - Name: ContainerName
           Value: !ImportValue
             'Fn::Sub': '${InfraStackName}-ContainerID'
@@ -292,15 +288,9 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                   - ecr:GetAuthorizationToken
-              - Resource: !Sub arn:aws:s3:::${PipelineArtifactsBucket}/*
-                Effect: Allow
-                Action:
                   - s3:GetObject
                   - s3:PutObject
                   - s3:GetObjectVersion
-              - Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${Repository}
-                Effect: Allow
-                Action:
                   - ecr:GetDownloadUrlForLayer
                   - ecr:BatchGetImage
                   - ecr:BatchCheckLayerAvailability
