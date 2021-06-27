@@ -60,7 +60,7 @@ Resources:
             ServiceName: Alfa-Service
             Cluster: !Ref Cluster
             LaunchType: FARGATE
-            DesiredCount: 4
+            DesiredCount: 3
             DeploymentConfiguration:
                 MaximumPercent: 150
                 MinimumHealthyPercent: 100
