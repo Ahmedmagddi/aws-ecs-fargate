@@ -14,22 +14,22 @@ Parameters:
   S3TemplateKeyPrefix:
     Description: location of templates that are used to build the infrastructure
     Type: String
-    Default: https://ahmed-ecs-cloudformation.s3.eu-west-2.amazonaws.com/infrastructure/
+  
 
   ProjectName:
     Description: An environment name that will be used all over solution arch
     Type: String
-    Default: BlueHarvest
+
 
   ContainerName:
     Description: Please enter a container name for your Application
     Type: String
-    Default: Nginx
+
 
   RepositoryName:
     Description: The name of the ECR repository
     Type: String
-    Default: dev-repo
+
 
 Resources:
 
