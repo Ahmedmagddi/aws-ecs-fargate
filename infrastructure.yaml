@@ -19,14 +19,17 @@ Parameters:
   ProjectName:
     Description: An environment name that will be used all over solution arch
     Type: String
+    Default: BlueHarvest
 
   ContainerName:
     Description: Please enter a container name for your Application
     Type: String
+    Default: Nginx
 
   RepositoryName:
     Description: The name of the ECR repository
     Type: String
+    Default: dev-repo
 
 Resources:
 
