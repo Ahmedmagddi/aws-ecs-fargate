@@ -14,7 +14,7 @@ Parameters:
   S3TemplateKeyPrefix:
     Description: location of templates that are used to build the infrastructure
     Type: String
-  
+
 
   ProjectName:
     Description: An environment name that will be used all over solution arch
