@@ -1,2 +1,2 @@
 # aws-ecs-fargate
-Deploy Nginx app to AWS ECS Fargate
+Pipeline to deploy Nginx app to AWS ECS Fargate
