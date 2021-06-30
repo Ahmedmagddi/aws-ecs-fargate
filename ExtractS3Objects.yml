@@ -6,12 +6,13 @@ phases:
       - echo List S3 Bucket Objects
       - aws --version
       - aws s3 ls s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/
-     
+      - filename=$(aws s3 ls s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/ | awk '{print $4}')
+      - echo $filename
   build:
     commands:
       - echo Build started on `date`
       - echo Unzip listed object from previous phase
-      - aws s3 cp s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/*.zip ./
+      - aws s3 cp s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/$filename  ./
       - ls -lart
       - unzip *.zip
       - ls -lart
