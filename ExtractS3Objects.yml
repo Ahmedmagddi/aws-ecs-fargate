@@ -13,9 +13,11 @@ phases:
       - echo Build started on `date`
       - echo Unzip listed object from previous phase
       - aws s3 cp s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/$filename  ./
+      - echo Remove zip file
+      - aws s3 rm s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/$filename --recursive
       - ls -lart
-      - unzip $filename
-      - ls -lart
+      - echo upload extracted files to zipped folder in the same S3 Bucket
+      - for i in `ls | grep yaml`;do aws s3 cp $i s3://$S3Bucket/unzipped/;done
   post_build:
     commands:
       - echo Build completed on `date`
