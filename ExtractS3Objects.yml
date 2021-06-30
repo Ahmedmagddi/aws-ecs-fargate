@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo List S3 Bucket Objects
+      - aws --version
+      - aws s3 ls s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/
+     
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Unzip listed object from previous phase
+      - aws s3 cp s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/*.zip ./
+      - ls -lart
+      - unzip *.zip
+      - ls -lart
+  post_build:
+    commands:
+      - echo Build completed on `date`
