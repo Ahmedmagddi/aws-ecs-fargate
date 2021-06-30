@@ -3,25 +3,17 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo List sourcecode zip file
+      - echo List sourcecode files
       - aws --version
       - ls -lart ./
-#      - Buildfolder=$(aws s3 ls s3://$S3Bucket/ | awk '{print $2}' | cut -d '/' -f1)
-#      - filename=$(aws s3 ls s3://$S3Bucket/$Buildfolder/SourceCode/ | awk '{print $4}')
-#      - aws s3 ls s3://$S3Bucket/$Buildfolder/SourceCode/    
-  # build:
-  #   commands:
-  #     - echo Build started on `date`
-  #     - echo Unzip listed object from previous phase
-  #     - aws s3 cp s3://$S3Bucket/$Buildfolder/SourceCode/$filename  ./
-  #     - echo Remove zip file from S3 Bucket
-  #     - aws s3 rm s3://$S3Bucket/$Buildfolder/SourceCode/$filename --recursive
-  #     - aws s3 ls s3://$S3Bucket/$Buildfolder/SourceCode/ 
-  #     - echo upload extracted files to unzipped folder in the same S3 Bucket
-  #     - for i in `ls | grep yaml`;do aws s3 cp $i s3://$S3Bucket/unzipped/;done
-  #     - echo Listing unzipped files
-  #     - aws s3 ls s3://$S3Bucket/unzipped/
-  # post_build:
-  #   commands:
-  #     - echo Build completed on `date`
-
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo upload infrastructure templates to infrastructure folder in the same S3 Bucket
+      - for i in `ls ./ | grep yaml`;do aws s3 cp $i s3://$S3Bucket/infrastructure/;done
+      - echo Listing files in infrastructure folder
+      - aws s3 ls s3://$S3Bucket/infrastructure/
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      
