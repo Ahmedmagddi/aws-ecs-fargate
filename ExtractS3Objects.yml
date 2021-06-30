@@ -14,7 +14,7 @@ phases:
       - echo Unzip listed object from previous phase
       - aws s3 cp s3://$S3Bucket/INFRA-PIPELINE-CodeP/SourceCode/$filename  ./
       - ls -lart
-      - unzip *.zip
+      - unzip $filename
       - ls -lart
   post_build:
     commands:
