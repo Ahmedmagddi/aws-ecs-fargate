@@ -39,6 +39,8 @@ Resources:
         # Allow access from anywhere to our ECS services
         - CidrIp: 0.0.0.0/0
           IpProtocol: -1
+        - CidrIp: 192.168.70.0/24
+          IpProtocol: -1
       Tags:
         - Key: Name
           Value: !Sub ${ProjectName}-LoadBalancers
