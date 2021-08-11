@@ -37,7 +37,7 @@ Parameters:
   GitHubOwner:
     Type: String
     Description: "Please enter your GitHub username"
-    Default: Ahmed90-DevOps
+    Default: Ahmedmagddi
     AllowedPattern: "[A-Za-z0-9-]+"
 
   GitHubRepo:
