@@ -12,6 +12,16 @@ For the purpose of isolating application source code changes from any Infrastruc
  
 ![alt text](https://github.com/Ahmedmagddi/aws-ecs-fargate/blob/main/images/infra%20pipeline%20hld.png?raw=true)
 
+# After Executing infrastructure pipeline stack:
+
+![alt text](https://github.com/Ahmedmagddi/aws-ecs-fargate/blob/main/images/INFRA-PIPELINE.png?raw=true)
+
 # Application Pipeline HLD:
 
 ![alt text](https://github.com/Ahmedmagddi/aws-ecs-fargate/blob/main/images/Application%20pipeline%20hld.png?raw=true)
+
+# After Executing Application pipeline stack:
+
+![alt text](https://github.com/Ahmedmagddi/aws-ecs-fargate/blob/main/images/APP-PIPELINE01.png?raw=true)
+
+![alt text](https://github.com/Ahmedmagddi/aws-ecs-fargate/blob/main/images/APP-PIPELINE02.png?raw=true)
